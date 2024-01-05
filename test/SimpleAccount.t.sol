@@ -68,7 +68,8 @@ contract SimpleAccountTest is Test {
 
 
     function test_UseropSignature() public {
-
+        
+        // Create test wallet with its own private key
         (address test_wallet, uint256 key) = makeAddrAndKey("test_wallet");
         // emit log_named_address("Address", test_wallet); 
         // emit log_named_uint("Private Key", key); 
@@ -76,8 +77,8 @@ contract SimpleAccountTest is Test {
         entry_point_simulations  = new EntryPointSimulations();
         simple_account_factory = new SimpleAccountFactory(entry_point_simulations);
 
-        simple_account = simple_account_factory.createAccount(test_wallet, 12345);
-        assertEq(simple_account.owner(), test_wallet);
+        simple_account = simple_account_factory.createAccount(test_wallet, 12345);  // createAccount(address(owner), nonce)
+        assertEq(simple_account.owner(), test_wallet);  // Check if owner is set to address 'test_wallet'
 
         UserOperation memory userop;
         userop.sender = address(simple_account);
@@ -92,16 +93,16 @@ contract SimpleAccountTest is Test {
         userop.paymasterAndData = hex"";
 
         bytes32 userop_hash = entry_point_simulations.getUserOpHash(userop);
-        bytes32 signed_eth_hash = MessageHashUtils.toEthSignedMessageHash(userop_hash);
+        bytes32 signed_eth_hash = MessageHashUtils.toEthSignedMessageHash(userop_hash);     // Needs to be hashed again to follow certain Etheruem standard
 
         // emit log_named_bytes32("userop_hash", userop_hash);
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(key, signed_eth_hash);
         bytes memory signature = abi.encodePacked(r, s, v);
 
         userop.signature = signature;
-        assertEq(ECDSA.recover(signed_eth_hash, signature), test_wallet);
+        assertEq(ECDSA.recover(signed_eth_hash, signature), test_wallet);       // Check if address recovered matches address set for 'test_wallet' 
 
-        IEntryPointSimulations.ValidationResult memory val_result;                                         
+        IEntryPointSimulations.ValidationResult memory val_result;      // Result will be                                       
         // IEntryPoint.ReturnInfo memory ret_info;
 
         val_result = entry_point_simulations.simulateValidation(userop);
