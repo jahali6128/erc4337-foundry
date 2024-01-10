@@ -13,7 +13,7 @@ import "./Helpers.sol";
  * provides helper methods for staking.
  * Validates that the postOp is called only by the entryPoint.
  */
-abstract contract BasePaymaster is IPaymaster, Ownable {
+ abstract contract BasePaymaster is IPaymaster, Ownable {
     IEntryPoint public immutable entryPoint;
 
     constructor(IEntryPoint _entryPoint) {
