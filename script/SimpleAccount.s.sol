@@ -24,15 +24,14 @@ contract SimpleAccountScript is Script {
 
     function run() public {
         
-        vm.startBroadcast();
+        // vm.startBroadcast();
+        // entry_point = new EntryPoint();
+        // entry_point_simulations = new EntryPointSimulations();
+        // simple_account_factory = new SimpleAccountFactory(entry_point);
+        // greeter = new Greeter();
 
-        entry_point = new EntryPoint();
-        entry_point_simulations = new EntryPointSimulations();
-        simple_account_factory = new SimpleAccountFactory(entry_point);
-        greeter = new Greeter();
-
-        simple_account = simple_account_factory.createAccount(address(1), 12345);
-        vm.stopBroadcast();
-
+        // simple_account = simple_account_factory.createAccount(address(1), 12345);
+        // vm.stopBroadcast();
+        vm.setEnv("Test", "Hello World!");
     }
 }
